@@ -1,4 +1,5 @@
 package com.universite.eventplatform.entity;
 
-public class TypeEvent {
+public enum TypeEvent {
+    CONFERENCE, SEMINAIRE, ATELIER, JOURNEE_SCIENTIFIQUE, FORMATION, AUTRE
 }
