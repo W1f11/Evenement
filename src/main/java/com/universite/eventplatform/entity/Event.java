@@ -34,6 +34,9 @@ public class Event {
 
     private boolean validationManuelle = false;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

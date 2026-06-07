@@ -7,6 +7,7 @@ import com.universite.eventplatform.exception.ResourceNotFoundException;
 import com.universite.eventplatform.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ public class InscriptionService {
     private final InscriptionRepository inscriptionRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public InscriptionDTO inscrire(Long etudiantId, Long eventId) {
         if (inscriptionRepository.existsByEtudiantIdAndEventId(etudiantId, eventId))
@@ -51,14 +53,33 @@ public class InscriptionService {
         inscriptionRepository.save(inscription);
     }
 
-    public InscriptionDTO valider(Long id) { return updateStatut(id, Inscription.StatutInscription.CONFIRMEE); }
-    public InscriptionDTO refuser(Long id) { return updateStatut(id, Inscription.StatutInscription.REFUSEE); }
+    @Transactional
+    public InscriptionDTO valider(Long id) {
+        InscriptionDTO dto = updateStatut(id, Inscription.StatutInscription.CONFIRMEE);
+        notificationService.createNotification(dto.getEtudiantId(),
+                "Votre inscription à \"" + dto.getEventTitre() + "\" a été confirmée.", dto.getEventId());
+        return dto;
+    }
+
+    @Transactional
+    public InscriptionDTO refuser(Long id) {
+        InscriptionDTO dto = updateStatut(id, Inscription.StatutInscription.REFUSEE);
+        notificationService.createNotification(dto.getEtudiantId(),
+                "Votre inscription à \"" + dto.getEventTitre() + "\" a été refusée.", dto.getEventId());
+        return dto;
+    }
 
     private InscriptionDTO updateStatut(Long id, Inscription.StatutInscription statut) {
         Inscription inscription = inscriptionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Inscription non trouvée: " + id));
         inscription.setStatut(statut);
         return toDTO(inscriptionRepository.save(inscription));
+    }
+
+    public InscriptionDTO getById(Long id) {
+        Inscription inscription = inscriptionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inscription non trouvée: " + id));
+        return toDTO(inscription);
     }
 
     public List<InscriptionDTO> getByEvent(Long eventId) {

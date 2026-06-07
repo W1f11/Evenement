@@ -14,6 +14,7 @@ public class EventDTO {
     private int capacite;
     private TypeEvent typeEvent;
     private boolean validationManuelle;
+    private String imageUrl;
     private Long organisateurId;
     private String organisateurNom;
     private int placesRestantes;

@@ -74,6 +74,7 @@ public class EventService {
         event.setDate(dto.getDate()); event.setLieu(dto.getLieu());
         event.setCapacite(dto.getCapacite()); event.setTypeEvent(dto.getTypeEvent());
         event.setValidationManuelle(dto.isValidationManuelle());
+        event.setImageUrl(dto.getImageUrl());
     }
 
     public EventDTO toDTO(Event event) {
@@ -83,6 +84,7 @@ public class EventService {
                 .id(event.getId()).titre(event.getTitre()).description(event.getDescription())
                 .date(event.getDate()).lieu(event.getLieu()).capacite(event.getCapacite())
                 .typeEvent(event.getTypeEvent()).validationManuelle(event.isValidationManuelle())
+                .imageUrl(event.getImageUrl())
                 .organisateurId(event.getOrganisateur() != null ? event.getOrganisateur().getId() : null)
                 .organisateurNom(event.getOrganisateur() != null ? event.getOrganisateur().getNom() : null)
                 .nombreInscrits((int) confirmed).placesRestantes(event.getCapacite() - (int) confirmed)

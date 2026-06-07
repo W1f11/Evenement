@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/events/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/conferences/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/users/**").hasAnyRole("ADMINISTRATEUR")
                         .requestMatchers("/api/statistiques/**").hasAnyRole("ADMINISTRATEUR", "ORGANISATEUR")
                         .anyRequest().authenticated()
